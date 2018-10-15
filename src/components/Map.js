@@ -29,14 +29,34 @@ const locations = [
   }
 ]
 
+const loadPosition = async () => {
+try {
+  const position = await getCurrentPosition();
+  return position
+} catch (error) {
+  console.log(error);
+}
+};
+
+const getCurrentPosition = (options = {}) => {
+return new Promise((resolve, reject) => {
+  navigator.geolocation.getCurrentPosition(resolve, reject, options);
+});
+};
+
 class Map extends Component {
+
   async componentDidMount() {
+    let geoLoc;
+    let position = await loadPosition();
+    console.log(position)
+    geoLoc = [position.coords.longitude, position.coords.latitude]
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW5keXdlaXNzMTk4MiIsImEiOiJIeHpkYVBrIn0.3N03oecxx5TaQz7YLg2HqA'
     const mapOptions = {
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       zoom: 12,
-      center: [-80.2044, 25.8028]
+      center: geoLoc
     };
     const geolocationOptions = {
       enableHighAccuracy: true,
@@ -54,12 +74,12 @@ class Map extends Component {
         accessToken: mapboxgl.accessToken
     }));
 
-    map.addControl(new mapboxgl.GeolocateControl({
-      positionOptions: {
-          enableHighAccuracy: true
-      },
-      trackUserLocation: true
-    }));
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: geolocationOptions,
+        trackUserLocation: true
+      })
+    );
 
     var nav = new mapboxgl.NavigationControl();
     map.addControl(nav, 'top-right');
