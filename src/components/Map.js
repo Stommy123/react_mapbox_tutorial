@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import './marker.css'
 import ReactDOMServer from 'react-dom/server'
 import Popup from './Popup'
@@ -26,11 +27,9 @@ class Map extends Component {
     this.map = new mapboxgl.Map(mapOptions);
     const map = this.map;
 
-    // map.addControl(
-    //   new MapboxGeocoder({
-    //     accessToken: mapboxgl.accessToken
-    //   })
-    // );
+    map.addControl(new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken
+    }));
 
     map.addControl(new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -83,13 +82,19 @@ class Map extends Component {
 
   render() {
     const style = {
-      width: '100%',
+      width: '50%',
       height: '500px',
       backgroundColor: 'azure'
     };
     return (
-      <div style={style} ref={el => this.mapContainer = el} />
+      <div>
+        <div style={style} ref={el => this.mapContainer = el}></div>
+      </div>
     )
+  }
+
+  componentWillUnmount() {
+    this.map.remove();
   }
 }
 
