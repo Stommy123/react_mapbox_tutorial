@@ -6,3 +6,8 @@
   border-radius: 50%;
   cursor: pointer;
 }
+
+#location-list {
+  border: 1px solid black;
+  width: 50%;
+}
