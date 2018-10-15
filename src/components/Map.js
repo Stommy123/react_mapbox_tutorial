@@ -1,10 +1,33 @@
 import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
-import './marker.css'
+import './Map.css'
 import ReactDOMServer from 'react-dom/server'
 import Popup from './Popup'
 import axios from 'axios'
+
+const locations = [
+  {
+    name: 'Wyncode',
+    longitude: -80.2044,
+    latitude: 25.8028
+  },
+  {
+    name: "Joe's Stone Crab",
+    longitude: -80.1353,
+    latitude: 25.7689
+  },
+  {
+    name: "Zuma",
+    longitude: -80.1896,
+    latitude: 25.7705
+  },
+  {
+    name: "My House",
+    longitude: -80.336180,
+    latitude: 25.584160
+  }
+]
 
 class Map extends Component {
   async componentDidMount() {
@@ -47,23 +70,6 @@ class Map extends Component {
   }
 
   fetchPlaces = () => {
-    const locations = [
-      {
-        name: 'Wyncode',
-        longitude: -80.2044,
-        latitude: 25.8028
-      },
-      {
-        name: "Joe's Stone Crab",
-        longitude: -80.1353,
-        latitude: 25.7689
-      },
-      {
-        name: "Zuma",
-        longitude: -80.1896,
-        latitude: 25.7705
-      },
-    ]
     const map = this.map;
     const self= this;
     locations.forEach((location, i) => {
@@ -80,6 +86,15 @@ class Map extends Component {
     })
   }
 
+  flyTo = (location) => {
+    this.map.flyTo({
+      center: [location.longitude, location.latitude],
+      bearing: 20,
+      zoom: 12,
+      pitch: 20
+    })
+  }
+
   render() {
     const style = {
       width: '50%',
@@ -87,8 +102,25 @@ class Map extends Component {
       backgroundColor: 'azure'
     };
     return (
-      <div>
-        <div style={style} ref={el => this.mapContainer = el}></div>
+      <div id="map-page">
+        <div>
+          <div id="location-list">
+            <ul>
+              {
+                locations.map((location, i) => {
+                  return (
+                    <li key={i} onClick={ (e) => { this.flyTo(location) } } >
+                      <h3>{location.name}</h3>
+                    </li>
+                  )
+                })
+              }
+          </ul>
+          </div>
+        </div>
+        <div>
+          <div style={style} ref={el => this.mapContainer = el}></div>
+        </div>
       </div>
     )
   }
