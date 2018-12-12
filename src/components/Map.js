@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
-import './Map.css'
 import ReactDOMServer from 'react-dom/server'
 import Popup from './Popup'
-import axios from 'axios'
+import './Map.css'
 
 const locations = [
   {
@@ -30,83 +29,65 @@ const locations = [
 ]
 
 const loadPosition = async () => {
-try {
-  const position = await getCurrentPosition();
-  return position
-} catch (error) {
-  console.log(error);
+  try {
+    const position = await getCurrentPosition()
+    return position
+  } 
+  catch (error) { console.log(error) }
 }
-};
 
-const getCurrentPosition = (options = {}) => {
-return new Promise((resolve, reject) => {
-  navigator.geolocation.getCurrentPosition(resolve, reject, options);
-});
-};
+const getCurrentPosition = (options = {}) => new Promise((res, rej) => { navigator.geolocation.getCurrentPosition(res, rej, options) })
 
 class Map extends Component {
 
   async componentDidMount() {
-    let geoLoc;
-    let position = await loadPosition();
-    console.log(position)
-    geoLoc = [position.coords.longitude, position.coords.latitude]
+    const position = await loadPosition();
+    const geoLoc = [position.coords.longitude, position.coords.latitude]
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW5keXdlaXNzMTk4MiIsImEiOiJIeHpkYVBrIn0.3N03oecxx5TaQz7YLg2HqA'
     const mapOptions = {
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       zoom: 12,
       center: geoLoc
-    };
+    }
     const geolocationOptions = {
       enableHighAccuracy: true,
       maximumAge: 30000,
       timeout: 27000
-    };
+    }
     await this.createMap(mapOptions, geolocationOptions)
   }
 
   createMap = (mapOptions, geolocationOptions) => {
     this.map = new mapboxgl.Map(mapOptions);
     const map = this.map;
-
-    map.addControl(new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken
-    }));
-
+    map.addControl(new MapboxGeocoder({ accessToken: mapboxgl.accessToken }))
     map.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: geolocationOptions,
         trackUserLocation: true
       })
-    );
-
-    var nav = new mapboxgl.NavigationControl();
-    map.addControl(nav, 'top-right');
-
-    map.on('load', (event) => {
-      this.fetchPlaces();
-    })
+    )
+    const nav = new mapboxgl.NavigationControl()
+    map.addControl(nav, 'top-right')
+    map.on('load', _ => this.fetchPlaces())
   }
 
   fetchPlaces = () => {
-    const map = this.map;
-    const self= this;
-    locations.forEach((location, i) => {
-      let elm = document.createElement('div')
+    const map = this.map
+    locations.forEach(location => {
+      const elm = document.createElement('div')
       elm.className = "mapbox-marker"
-      let popup = new mapboxgl.Popup({ offset: 25})
-      .setHTML(ReactDOMServer.renderToStaticMarkup(
-        <Popup location={location}></Popup>
-      ))
-      let marker = new mapboxgl.Marker(elm)
+      const popup = new mapboxgl.Popup({ offset: 25})
+      .setHTML(ReactDOMServer.renderToStaticMarkup(<Popup location={location} />))
+      const marker = new mapboxgl.Marker(elm)
       .setLngLat([location.longitude, location.latitude])
       .setPopup(popup)
       marker.addTo(map)
     })
   }
 
-  flyTo = (location) => {
+  flyTo = location => {
     this.map.flyTo({
       center: [location.longitude, location.latitude],
       bearing: 20,
@@ -115,38 +96,25 @@ class Map extends Component {
     })
   }
 
+  componentWillUnmount() { this.map.remove() }
+
   render() {
-    const style = {
-      width: '50%',
-      height: '500px',
-      backgroundColor: 'azure'
-    };
     return (
       <div id="map-page">
-        <div>
-          <div id="location-list">
-            <ul>
+          <ul id="location-list">
               {
-                locations.map((location, i) => {
+                locations.map((loc, i) => {
                   return (
-                    <li key={i} onClick={ (e) => { this.flyTo(location) } } >
-                      <h3>{location.name}</h3>
+                    <li key={i} onClick={ _ => this.flyTo(loc) }>
+                      <h3>{loc.name}</h3>
                     </li>
                   )
                 })
               }
           </ul>
-          </div>
-        </div>
-        <div>
-          <div style={style} ref={el => this.mapContainer = el}></div>
-        </div>
+          <div id='map' ref={el => this.mapContainer = el} />
       </div>
     )
-  }
-
-  componentWillUnmount() {
-    this.map.remove();
   }
 }
 

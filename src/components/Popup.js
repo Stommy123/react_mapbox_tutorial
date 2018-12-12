@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Popup extends Component {
+const Popup = _ => (
+  <div className="popup">
+    <p>{this.props.location.name}</p>
+  </div>
+)
 
-  render() {
-    return (
-      <div>
-        <p>{this.props.location.name}</p>
-      </div>
-    )
-  }
-}
+export default Popup

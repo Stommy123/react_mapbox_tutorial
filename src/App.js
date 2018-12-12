@@ -1,16 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Map from './components/Map.js'
 
-class App extends Component {
-  render() {
-    return (
+const App = _ => (
       <div className="App">
-        <div>
-          <Map></Map>
-        </div>
+          <Map />
       </div>
-    );
-  }
-}
+)
 
 export default App;
