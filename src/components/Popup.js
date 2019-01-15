@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Popup = _ => (
+const Popup = ({ location }) => (
   <div className="popup">
-    <p>{this.props.location.name}</p>
+    <p>{location.name}</p>
   </div>
 )
 
