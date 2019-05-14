@@ -1,10 +1,6 @@
 import React from 'react';
-import Map from './components/Map.js'
+import Map from './components/Map.js';
 
-const App = _ => (
-      <div className="App">
-          <Map />
-      </div>
-)
+const App = _ => <Map />;
 
 export default App;
