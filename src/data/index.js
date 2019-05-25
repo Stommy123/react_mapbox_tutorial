@@ -101,6 +101,6 @@ export const DRONE_LAYER = {
   type: "symbol",
   source: "drone",
   layout: {
-    "icon-image": "rocket-15"
+    "icon-image": "pikachu"
   }
 };

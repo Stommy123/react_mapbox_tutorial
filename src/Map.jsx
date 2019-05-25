@@ -6,10 +6,12 @@ import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import { loadPosition, parseGeoJson, geolocationOptions, MAPBOX_API_KEY, popupRenderer } from "./utils";
 import { MARKER_DATA, MARKER_LAYER, LINE_DATA, LINE_LAYER, EARTHQUAKE_HEATMAP_LAYER, DRONE_LAYER } from "./data";
 import { LocationList, LayerList } from "./components";
+import Pikachu from "./images/pika.png";
 
 const droneUrl = "https://wanderdrone.appspot.com/";
 
 const layers = ["markers", "route", "earthquakes-heat", "drone"];
+const pikachu = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png";
 
 class Map extends Component {
   state = { visibleLayers: layers };
@@ -47,6 +49,10 @@ class Map extends Component {
     map.addControl(nav, "top-right");
     map.on("load", _ => {
       const markerData = parseGeoJson(MARKER_DATA);
+      map.loadImage(Pikachu, (error, img) => {
+        if (error) return;
+        map.addImage("pikachu", img);
+      });
       map.addSource("markers", { type: "geojson", data: markerData });
       map.addSource("route", { type: "geojson", data: LINE_DATA });
       map.addSource("drone", { type: "geojson", data: droneUrl });
