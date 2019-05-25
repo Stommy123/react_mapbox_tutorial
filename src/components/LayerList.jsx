@@ -2,7 +2,7 @@ import React from "react";
 
 const LayerList = ({ layers = [], visibleLayers, toggleLayer }) => (
   <div id="layer-list">
-    <h1>Active Layers</h1>
+    <h1>Click to toggle a layer!</h1>
     {layers.map(layer => {
       const buttonType = visibleLayers.includes(layer) ? "btn-info" : "btn-secondary";
       return (
