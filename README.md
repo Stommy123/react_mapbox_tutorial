@@ -9,4 +9,3 @@ Simple Mapbox Intro Tutorial
  * Live time data update 
  * Layer toggling 
  * FlyTo
- * 
