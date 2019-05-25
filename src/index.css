@@ -37,7 +37,7 @@ code {
 #location-list {
   border: 1px solid black;
   width: 50%;
-  height: 300px;
+  height: 250px;
 }
 #location-list h3 {
   margin: 0 auto;
@@ -45,7 +45,8 @@ code {
 }
 
 #map {
-  width: 50%;
+  margin: 0 auto;
+  width: 80%;
   height: 500px;
   background-color: "azure";
 }
@@ -61,7 +62,7 @@ code {
   text-align: center;
   border: 1px solid black;
   width: 50%;
-  height: 300px;
+  height: 250px;
 }
 
 .layer-button {
