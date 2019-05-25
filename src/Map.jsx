@@ -11,7 +11,6 @@ import Pikachu from "./images/pika.png";
 const droneUrl = "https://wanderdrone.appspot.com/";
 
 const layers = ["markers", "route", "earthquakes-heat", "drone"];
-const pikachu = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png";
 
 class Map extends Component {
   state = { visibleLayers: layers };
@@ -49,9 +48,9 @@ class Map extends Component {
     map.addControl(nav, "top-right");
     map.on("load", _ => {
       const markerData = parseGeoJson(MARKER_DATA);
-      map.loadImage(Pikachu, (error, img) => {
+      map.loadImage(Pikachu, (error, pika) => {
         if (error) return;
-        map.addImage("pikachu", img);
+        map.addImage("pikachu", pika);
       });
       map.addSource("markers", { type: "geojson", data: markerData });
       map.addSource("route", { type: "geojson", data: LINE_DATA });
