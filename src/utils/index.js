@@ -1,5 +1,6 @@
 const getCurrentPosition = _ =>
   new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
+
 export const loadPosition = async _ => {
   try {
     return await getCurrentPosition();
@@ -13,7 +14,7 @@ export const loadPosition = async _ => {
   }
 };
 
-export const parseGeoJson = data => {
+export const parseGeoJson = (data = []) => {
   if (!data.length) return;
   const features = data.map(item => ({
     type: "Feature",

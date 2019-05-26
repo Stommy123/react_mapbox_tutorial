@@ -19,7 +19,7 @@ export const MARKER_DATA = [
   },
   {
     id: "4",
-    name: "My House",
+    name: "Home",
     longitude: -80.33618,
     latitude: 25.58416
   }
@@ -44,6 +44,7 @@ export const LINE_DATA = {
     coordinates: [[-80.2044, 25.8028], [-80.2771, 25.7192], [-80.3383, 25.6448], [-80.3361652, 25.5842709]]
   }
 };
+
 export const LINE_LAYER = {
   id: "route",
   type: "line",
@@ -57,6 +58,8 @@ export const LINE_LAYER = {
     "line-width": 8
   }
 };
+
+export const EARTHQUAKE_DATA = "https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson";
 
 export const EARTHQUAKE_HEATMAP_LAYER = {
   id: "earthquakes-heat",
@@ -96,6 +99,8 @@ export const EARTHQUAKE_HEATMAP_LAYER = {
   }
 };
 
+export const DRONE_DATA = "https://wanderdrone.appspot.com/";
+
 export const DRONE_LAYER = {
   id: "drone",
   type: "symbol",
@@ -104,3 +109,5 @@ export const DRONE_LAYER = {
     "icon-image": "pikachu"
   }
 };
+
+export const LAYERS = ["markers", "route", "earthquakes-heat", "drone"];

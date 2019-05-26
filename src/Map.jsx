@@ -4,16 +4,22 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 import { loadPosition, parseGeoJson, geolocationOptions, MAPBOX_API_KEY, popupRenderer } from "./utils";
-import { MARKER_DATA, MARKER_LAYER, LINE_DATA, LINE_LAYER, EARTHQUAKE_HEATMAP_LAYER, DRONE_LAYER } from "./data";
+import {
+  MARKER_DATA,
+  MARKER_LAYER,
+  LINE_DATA,
+  LINE_LAYER,
+  EARTHQUAKE_DATA,
+  EARTHQUAKE_HEATMAP_LAYER,
+  DRONE_DATA,
+  DRONE_LAYER,
+  LAYERS
+} from "./data";
 import { LocationList, LayerList } from "./components";
 import Pikachu from "./images/pika.png";
 
-const droneUrl = "https://wanderdrone.appspot.com/";
-
-const layers = ["markers", "route", "earthquakes-heat", "drone"];
-
 class Map extends Component {
-  state = { visibleLayers: layers };
+  state = { visibleLayers: LAYERS };
   async componentDidMount() {
     const position = await loadPosition();
     const { longitude, latitude } = get(position, "coords", {});
@@ -38,33 +44,25 @@ class Map extends Component {
         trackUserLocation: true
       })
     );
-    map.addControl(
-      new MapboxDirections({
-        accessToken: mapboxgl.accessToken
-      }),
-      "top-left"
-    );
-    const nav = new mapboxgl.NavigationControl();
-    map.addControl(nav, "top-right");
+    map.addControl(new MapboxDirections({ accessToken: mapboxgl.accessToken }), "top-left");
+    map.addControl(new mapboxgl.NavigationControl(), "top-right");
     map.on("load", _ => {
       const markerData = parseGeoJson(MARKER_DATA);
       map.loadImage(Pikachu, (error, pika) => {
         if (error) return;
         map.addImage("pikachu", pika);
       });
-      map.addSource("markers", { type: "geojson", data: markerData });
-      map.addSource("route", { type: "geojson", data: LINE_DATA });
-      map.addSource("drone", { type: "geojson", data: droneUrl });
-      map.addSource("earthquakes", {
-        type: "geojson",
-        data: "https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"
+      [
+        { id: "markers", data: markerData, layer: MARKER_LAYER },
+        { id: "route", data: LINE_DATA, layer: LINE_LAYER },
+        { id: "drone", data: DRONE_DATA, layer: DRONE_LAYER },
+        { id: "earthquakes", data: EARTHQUAKE_DATA, layer: EARTHQUAKE_HEATMAP_LAYER }
+      ].forEach(({ id, data, layer }) => {
+        map.addSource(id, { type: "geojson", data });
+        map.addLayer(layer);
       });
-      map.addLayer(MARKER_LAYER);
-      map.addLayer(LINE_LAYER);
-      map.addLayer(DRONE_LAYER);
-      map.addLayer(EARTHQUAKE_HEATMAP_LAYER, "waterway-label");
       map.on("click", "markers", this.handleMarkerClick);
-      this.droneInterval = setInterval(_ => map.getSource("drone").setData(droneUrl), 3000);
+      this.droneInterval = setInterval(_ => map.getSource("drone").setData(DRONE_DATA), 3000);
     });
   };
   handleMarkerClick = e => {
@@ -114,7 +112,7 @@ class Map extends Component {
       <div id="map-page">
         <div id="list">
           <LocationList locations={MARKER_DATA} flyTo={this.flyTo} />
-          <LayerList layers={layers} toggleLayer={this.toggleLayer} visibleLayers={visibleLayers} />
+          <LayerList layers={LAYERS} toggleLayer={this.toggleLayer} visibleLayers={visibleLayers} />
         </div>
         <div id="map" ref={el => (this.mapContainer = el)} />
       </div>
