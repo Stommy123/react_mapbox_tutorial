@@ -3,7 +3,14 @@ import { get } from 'lodash';
 import mapboxgl, { Map as MapBox, GeolocateControl, NavigationControl } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
-import { loadPosition, parseGeoJson, geolocationOptions, MAPBOX_API_KEY, popupRenderer, flyToProps } from './utils';
+import {
+  loadPosition,
+  parseGeoJson,
+  geolocationOptions as positionOptions,
+  MAPBOX_API_KEY,
+  popupRenderer,
+  flyToProps
+} from './utils';
 import {
   MARKER_DATA,
   MARKER_LAYER,
@@ -30,10 +37,10 @@ class Map extends Component {
       zoom: 12,
       center: [longitude, latitude]
     };
-    this.createMap(mapOptions, geolocationOptions);
+    this.createMap(mapOptions);
   }
 
-  createMap = (mapOptions, positionOptions) => {
+  createMap = mapOptions => {
     this.map = new MapBox(mapOptions);
     const map = this.map;
     const { accessToken } = mapboxgl;
