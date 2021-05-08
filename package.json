@@ -6,7 +6,7 @@
     "@babel/polyfill": "^7.0.0",
     "@mapbox/mapbox-gl-directions": "^4.0.0",
     "@mapbox/mapbox-gl-geocoder": "^2.3.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "mapbox-gl": "^0.50.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
